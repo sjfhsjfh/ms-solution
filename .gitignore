@@ -1,0 +1,9 @@
+# Rust
+/target
+
+# Mac OS
+.DS_Store
+
+# Reverse Engineering
+/*.exe
+/output*

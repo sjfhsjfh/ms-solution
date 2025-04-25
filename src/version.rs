@@ -1,0 +1,3 @@
+pub const CURRENT_VERSION: i32 = 10023;
+pub const SOME_FIRST_VERSION: i32 = 1001;
+pub const SOME_OLD_VERSION: i32 = 1003;

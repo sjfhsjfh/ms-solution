@@ -54,7 +54,7 @@ impl Neg for Rotation {
 
 impl From<i32> for Rotation {
     fn from(value: i32) -> Self {
-        match (value % 6 + 6) % 6 {
+        match value.rem_euclid(6) {
             0 => Rotation::R0,
             1 => Rotation::R60,
             2 => Rotation::R120,

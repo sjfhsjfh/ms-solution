@@ -134,12 +134,12 @@ impl<D: BinData> BinData for Vec<D> {
 impl BinData for String {
     fn read<R: Read>(reader: &mut R) -> Result<Self> {
         let buf = Vec::<u8>::read(reader)?;
-        Ok(String::from_utf8(buf).map_err(|_| "Failed to convert to String")?)
+        String::from_utf8(buf).map_err(|_| "Failed to convert to String")
     }
 
     fn write<W: Write>(&self, writer: &mut W) -> Result<()> {
         let buf = self.bytes().collect::<Vec<u8>>();
-        Ok(buf.write(writer)?)
+        buf.write(writer)
     }
 }
 
@@ -204,7 +204,7 @@ impl BinData for Solution {
         let version = i32::read(reader)?;
         debug!("Version: {}", version);
 
-        if version > CURRENT_VERSION || version < SOME_OLD_VERSION {
+        if !(SOME_OLD_VERSION..=CURRENT_VERSION).contains(&version) {
             error!("Invalid version: {}", version);
             return Err("Invalid version");
         }
@@ -265,10 +265,9 @@ impl BinData for Rotation {
 impl BinData for Instruction {
     fn read<R: Read>(reader: &mut R) -> Result<Self> {
         let val = u8::read(reader)?;
-        Ok(val.try_into().map_err(|err| {
+        val.try_into().inspect_err(|_| {
             error!("Invalid instruction value: {}", val);
-            err
-        })?)
+        })
     }
 
     fn write<W: Write>(&self, writer: &mut W) -> Result<()> {
@@ -280,7 +279,7 @@ impl BinData for Instruction {
 impl BinData for PartType {
     fn read<R: Read>(reader: &mut R) -> Result<Self> {
         let val = i32::read(reader)?;
-        Ok(val.try_into().map_err(|_| "Invalid part type")?)
+        val.try_into().map_err(|_| "Invalid part type")
     }
 
     fn write<W: Write>(&self, writer: &mut W) -> Result<()> {
@@ -292,7 +291,7 @@ impl BinData for PartType {
 impl BinData for Precursor {
     fn read<R: Read>(reader: &mut R) -> Result<Self> {
         let val = i32::read(reader)?;
-        Ok(val.try_into().map_err(|_| "Invalid precursor value")?)
+        val.try_into().map_err(|_| "Invalid precursor value")
     }
 
     fn write<W: Write>(&self, writer: &mut W) -> Result<()> {
